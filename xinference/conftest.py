@@ -222,7 +222,7 @@ def _setup_cluster(use_test_pool: bool = True) -> Iterator[Tuple[str, str]]:
             supervisor_addr, TEST_LOGGING_CONF, use_test_pool
         )
         cleanup.callback(_stop_test_process, local_cluster_proc)
-        if not cluster_health_check(supervisor_addr, max_attempts=10, sleep_interval=5):
+        if not cluster_health_check(supervisor_addr, max_attempts=50, sleep_interval=1):
             raise RuntimeError("Cluster is not available after multiple attempts")
 
         port = _get_test_port()
@@ -234,7 +234,7 @@ def _setup_cluster(use_test_pool: bool = True) -> Iterator[Tuple[str, str]]:
         )
         cleanup.callback(_stop_test_process, restful_api_proc)
         endpoint = f"http://127.0.0.1:{port}"
-        if not api_health_check(endpoint, max_attempts=10, sleep_interval=5):
+        if not api_health_check(endpoint, max_attempts=50, sleep_interval=1):
             raise RuntimeError("Endpoint is not available after multiple attempts")
 
         yield f"http://127.0.0.1:{port}", supervisor_addr
@@ -270,7 +270,7 @@ def setup_with_file_logging():
             supervisor_addr, TEST_FILE_LOGGING_CONF
         )
         cleanup.callback(_stop_test_process, local_cluster_proc)
-        if not cluster_health_check(supervisor_addr, max_attempts=10, sleep_interval=5):
+        if not cluster_health_check(supervisor_addr, max_attempts=50, sleep_interval=1):
             raise RuntimeError("Cluster is not available after multiple attempts")
 
         port = _get_test_port()
@@ -282,7 +282,7 @@ def setup_with_file_logging():
         )
         cleanup.callback(_stop_test_process, restful_api_proc)
         endpoint = f"http://127.0.0.1:{port}"
-        if not api_health_check(endpoint, max_attempts=10, sleep_interval=5):
+        if not api_health_check(endpoint, max_attempts=50, sleep_interval=1):
             raise RuntimeError("Endpoint is not available after multiple attempts")
 
         yield f"http://127.0.0.1:{port}", supervisor_addr, TEST_LOG_FILE_PATH
