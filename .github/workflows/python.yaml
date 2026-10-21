@@ -1,12 +1,7 @@
 name: Python CI
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    types: ['opened', 'reopened', 'synchronize', 'ready_for_review']
-  # Run this full cross-platform suite manually before releases.
+  # fork-only measurement harness (agarg21): dispatch only
   workflow_dispatch:
 
 concurrency:
@@ -281,7 +276,7 @@ jobs:
   install_script:
     name: Install Script CI
     needs: [lint, changes]
-    if: ${{ needs.changes.outputs.install == 'true' }}
+    if: false  # fork-only harness
     permissions:
       contents: read
     uses: ./.github/workflows/install-script.yaml
@@ -630,7 +625,7 @@ jobs:
   platform_test_job:
     name: build_test_job (${{ matrix.os }}, ${{ matrix.python-version }}, xinference)
     needs: [lint, changes]
-    if: ${{ needs.changes.outputs.platform == 'true' }}
+    if: false  # fork-only harness
     runs-on: ${{ matrix.os }}
     env:
       CONDA_ENV: test
@@ -648,7 +643,7 @@ jobs:
   metal_test_job:
     name: build_test_job (${{ matrix.os }}, ${{ matrix.python-version }}, metal)
     needs: [lint, changes]
-    if: ${{ needs.changes.outputs.metal == 'true' }}
+    if: false  # fork-only harness
     runs-on: ${{ matrix.os }}
     env:
       CONDA_ENV: test
@@ -669,7 +664,7 @@ jobs:
     # Runners are billed per-minute: skip when no GPU-relevant path changed.
     # PRs and runs on main are eligible, including manual full runs;
     # a push to a PR branch already triggers the pull_request run.
-    if: ${{ needs.changes.outputs.gpu == 'true' && (github.event_name == 'pull_request' || github.ref == 'refs/heads/main') }}
+    if: false  # fork-only harness (gpu-t4 is self-hosted)
     timeout-minutes: 90
     env:
       CONDA_ENV: test
