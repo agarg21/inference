@@ -38,6 +38,7 @@ jobs:
           TEST_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: pre-commit run --all-files
       - name: Test CI workflow
+        if: false  # fork-only measurement harness: these tests assert upstream's job graph, which the harness trims
         env:
           TEST_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
           TEST_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
